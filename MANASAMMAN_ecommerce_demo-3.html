@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANASAMMAN | Online Store</title>
+<style>
+:root{--g:#08783f;--gd:#04562e;--gl:#eaf8f0;--b:#111;--w:#fff;--mut:#687174;--line:#e2e8e5}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7faf8;color:var(--b)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.top{background:var(--gd);color:white;padding:9px 5%;display:flex;justify-content:space-between;font-size:13px}
+.header{background:white;padding:18px 5%;display:flex;align-items:center;gap:25px;border-bottom:1px solid var(--line)}
+.logo{font-size:29px;font-weight:900;color:var(--g);white-space:nowrap}.logo span{color:#111}
+.search{flex:1;display:flex;max-width:650px}.search input{width:100%;padding:13px 16px;border:1px solid #ccd8d2;border-radius:28px 0 0 28px;outline:none}.search button{width:55px;border:0;background:var(--g);color:white;border-radius:0 28px 28px 0}
+.actions{display:flex;gap:14px;align-items:center}.actions button{background:white;border:0}.badge{background:#e21b2d;color:white;border-radius:20px;padding:2px 6px;font-size:10px}
+.nav{background:var(--g);color:white;display:flex;gap:30px;padding:13px 5%;align-items:center}.nav a{color:white;text-decoration:none;cursor:pointer}.nav .all{font-weight:bold}
+.hero{margin:18px 5%;background:linear-gradient(90deg,#0b6e3d,#74bb65);color:white;border-radius:16px;padding:45px 6%;min-height:260px;display:flex;align-items:center;justify-content:space-between}.hero h1{font-size:48px;margin:5px 0}.hero p{font-size:19px}.cta{background:#ffd34e;border:0;padding:13px 25px;border-radius:28px;font-weight:bold}
+.cats,.products{padding:10px 5%;display:grid;gap:14px}.cats{grid-template-columns:repeat(7,1fr)}.cat{background:white;border:1px solid var(--line);padding:20px 10px;border-radius:14px;text-align:center;font-weight:bold;transition:.2s}.cat:hover{transform:translateY(-3px);border-color:var(--g)}.emoji{font-size:35px;display:block;margin-bottom:8px}
+.section{padding:20px 5% 5px;display:flex;justify-content:space-between;align-items:center}.section h2{margin:0;font-size:28px}.products{grid-template-columns:repeat(4,1fr)}.card{background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden;padding-bottom:14px}.pic{height:150px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:70px}.card h3,.card p,.card .price,.card button{margin-left:15px;margin-right:15px}.card h3{font-size:16px;margin-bottom:5px}.rating{color:#f5a400}.price{font-weight:900;font-size:19px;margin-top:9px}.old{text-decoration:line-through;color:#888;font-size:12px;margin-left:7px}.add{width:calc(100% - 30px);padding:10px;background:var(--g);color:white;border:0;border-radius:8px;margin-top:12px}
+.features{margin-top:25px;background:#eef8f2;display:grid;grid-template-columns:repeat(4,1fr);padding:22px 5%;text-align:center}.feature strong{display:block}
+.footer{background:#034c2a;color:white;margin-top:25px;padding:35px 5%;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:25px}.footer a{color:white;display:block;margin:8px 0}.support{line-height:1.7}
+.overlay{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:center;justify-content:center;padding:20px}.modal{background:white;border-radius:16px;max-width:520px;width:100%;padding:25px;max-height:90vh;overflow:auto}.modal h2{margin-top:0}.close{float:right;border:0;background:#eee;border-radius:50%;width:30px;height:30px}.field{margin:12px 0}.field label{display:block;font-weight:bold;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid #ccd8d2;border-radius:8px}.green{background:var(--g);color:white;border:0;padding:11px 18px;border-radius:8px}.tabs{display:flex;gap:8px;margin-bottom:18px}.tabs button{flex:1;padding:10px;border:1px solid var(--line);background:white;border-radius:8px}.tabs button.active{background:var(--g);color:white}.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.admin-box{background:var(--gl);padding:16px;border-radius:10px}.cart-row{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:12px 0}
+.toast{position:fixed;right:20px;bottom:20px;background:#111;color:white;padding:13px 18px;border-radius:9px;display:none;z-index:50}
+@media(max-width:900px){.cats{grid-template-columns:repeat(4,1fr)}.products{grid-template-columns:repeat(2,1fr)}.footer{grid-template-columns:1fr 1fr}.header{flex-wrap:wrap}.search{order:3;max-width:none;width:100%}}
+@media(max-width:600px){.top{font-size:11px}.logo{font-size:23px}.actions{gap:5px}.nav{overflow:auto;white-space:nowrap}.hero{margin:12px 3%;padding:30px 7%;min-height:240px}.hero h1{font-size:35px}.cats{padding:5px 3%;grid-template-columns:repeat(2,1fr)}.products{padding:5px 3%;grid-template-columns:repeat(2,1fr)}.pic{height:120px}.features{grid-template-columns:repeat(2,1fr);gap:18px}.footer{grid-template-columns:1fr}.card h3{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="top"><span>🚚 Fresh Products &nbsp; | &nbsp; Better Quality &nbsp; | &nbsp; Happy Customers</span><span>English &nbsp;|&nbsp; తెలుగు &nbsp;|&nbsp; हिन्दी</span></div>
+
+<header class="header">
+  <div class="logo">🛒 <span>MANASAMMAN</span></div>
+  <div class="search"><input id="search" placeholder="Search for products, categories..." oninput="searchProducts()"><button>🔍</button></div>
+  <div class="actions">
+    <button onclick="openModal('login')">👤 Login / Sign In</button>
+    <button onclick="openModal('cart')">🛒 Cart <b class="badge" id="cartCount">0</b></button>
+  </div>
+</header>
+
+<nav class="nav">
+  <a class="all" onclick="showToast('All categories opened')">☰ All Categories</a>
+  <a>Home</a><a onclick="filterCat('Toys')">Products</a><a onclick="showToast('Deals section')">Deals</a>
+  <a onclick="openModal('support')">Contact Support</a><a onclick="openModal('admin')">Admin Panel</a>
+</nav>
+
+<section class="hero">
+ <div><small>GOOD PRODUCTS • HAPPY LIFE</small><h1>Shop Smart.<br>Shop MANASAMMAN.</h1><p>Toys, Education, Jewellery, Agriculture Items, Home Made Food, Fasion & Others.</p><button class="cta" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now →</button></div>
+ <div style="font-size:100px">🛍️🌱</div>
+</section>
+
+<div class="section"><h2>Shop by Category</h2></div>
+<section class="cats">
+ <div class="cat" onclick="filterCat('Toys')"><span class="emoji">🧸</span>Toys</div>
+ <div class="cat" onclick="filterCat('Education')"><span class="emoji">📚</span>Education</div>
+ <div class="cat" onclick="filterCat('Jewellery')"><span class="emoji">💎</span>Jewellery</div>
+ <div class="cat" onclick="filterCat('Agriculture Items')"><span class="emoji">🌱</span>Agriculture Items</div>
+ <div class="cat" onclick="filterCat('Home Made Food')"><span class="emoji">🍯</span>Home Made Food</div>
+ <div class="cat" onclick="filterCat('Fasion')"><span class="emoji">👗</span>Fasion</div>
+ <div class="cat" onclick="filterCat('Others')"><span class="emoji">📦</span>Others</div>
+</section>
+
+<div class="section"><h2>Featured Products</h2><button class="green" onclick="resetProducts()">View All</button></div>
+<section class="products" id="products"></section>
+
+<section class="features">
+ <div class="feature">🚚<strong>Fast Delivery</strong><small>Selected locations</small></div>
+ <div class="feature">🔒<strong>Secure Payments</strong><small>UPI / Cards / Net Banking</small></div>
+ <div class="feature">↩️<strong>Easy Returns</strong><small>Within 7 Days</small></div>
+ <div class="feature">🎧<strong>Customer Support</strong><small>9 AM – 6 PM, Mon–Sat</small></div>
+</section>
+
+<footer class="footer">
+ <div><div class="logo" style="color:white">🛒 MANASAMMAN</div><p>Quality Products • For a Better You</p></div>
+ <div><b>Quick Links</b><a>Home</a><a>About Us</a><a>Privacy Policy</a><a>Terms & Conditions</a></div>
+ <div><b>Customer Care</b><a onclick="openModal('support')">Contact Support</a><a onclick="openModal('track')">Track Order</a><a>FAQs</a><a>Returns</a></div>
+ <div class="support"><b>Support</b><br>🕘 9 AM – 6 PM<br>Monday – Saturday<br>Sunday Holiday<br><br>📱 WhatsApp • Instagram • YouTube • Telegram</div>
+</footer>
+
+<div class="overlay" id="login"><div class="modal"><button class="close" onclick="closeModal('login')">×</button><h2>Sign In / Login</h2><div class="tabs"><button class="active" onclick="loginTab('user')">Customer Login</button><button onclick="loginTab('signup')">Create Account</button></div><div id="loginBody"><div class="field"><label>Mobile / Email</label><input placeholder="Enter mobile or email"></div><div class="field"><label>Password / OTP</label><input type="password" placeholder="Enter password"></div><button class="green" onclick="login()">Login</button></div></div></div>
+
+<div class="overlay" id="cart"><div class="modal"><button class="close" onclick="closeModal('cart')">×</button><h2>🛒 Your Cart</h2><div id="cartBody"></div><button class="green" style="width:100%;margin-top:15px" onclick="openPayment()">Proceed to Payment</button></div></div>
+
+<div class="overlay" id="payment"><div class="modal"><button class="close" onclick="closeModal('payment')">×</button><h2>💳 Secure Checkout</h2><div id="paymentSummary"></div><div class="field"><label>Payment Method</label><select id="payMethod"><option>Cash on Delivery</option><option>UPI</option><option>Debit / Credit Card</option><option>Net Banking</option></select></div><div class="field"><label>Delivery Address</label><textarea rows="3" placeholder="Enter full delivery address"></textarea></div><button class="green" style="width:100%" onclick="placeOrder()">Place Order</button><p style="font-size:12px;color:#687174">Demo checkout: connect a real payment gateway before accepting live online payments.</p></div></div>
+
+<div class="overlay" id="support"><div class="modal"><button class="close" onclick="closeModal('support')">×</button><h2>🎧 Contact Support</h2><p><b>Support Hours:</b> 9:00 AM – 6:00 PM, Monday–Saturday<br><b>Sunday:</b> Holiday</p><div class="field"><label>Name</label><input id="sname"></div><div class="field"><label>Mobile / Email</label><input id="semail"></div><div class="field"><label>Message</label><textarea id="smsg" rows="4" placeholder="How can we help?"></textarea></div><button class="green" onclick="sendSupport()">Send Support Request</button></div></div>
+
+<div class="overlay" id="admin"><div class="modal"><button class="close" onclick="closeModal('admin')">×</button><h2>⚙️ MANASAMMAN Admin Panel</h2><p style="color:#687174">Demo admin dashboard for managing the store.</p><div class="admin-grid"><div class="admin-box"><b>Products</b><h2 id="adminProducts">7</h2><button class="green" onclick="showToast('Add Product form opened')">+ Add Product</button></div><div class="admin-box"><b>Orders</b><h2>0</h2><button class="green" onclick="showToast('Orders opened')">View Orders</button></div><div class="admin-box"><b>Customers</b><h2>0</h2><button class="green" onclick="showToast('Customers opened')">View Customers</button></div><div class="admin-box"><b>Payments</b><h2>Ready</h2><button class="green" onclick="showToast('Payment settings opened')">Payment Settings</button></div></div><hr><p><b>Store Settings:</b> Categories • Products • Orders • Coupons • Payments • Delivery • Support • Users</p></div></div>
+
+<div class="overlay" id="track"><div class="modal"><button class="close" onclick="closeModal('track')">×</button><h2>📦 Track Order</h2><div class="field"><label>Order ID</label><input id="orderId" placeholder="e.g. MS1001"></div><button class="green" onclick="showToast('Enter a valid order ID after placing an order')">Track</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const products=[
+ {id:1,cat:'Toys',name:'Teddy Bear (Soft Toy)',price:499,old:699,emoji:'🧸',rating:'4.5'},
+ {id:2,cat:'Education',name:'Kids Learning Kit',price:749,old:999,emoji:'📚',rating:'4.6'},
+ {id:3,cat:'Jewellery',name:'Traditional Necklace Set',price:1299,old:1999,emoji:'💎',rating:'4.7'},
+ {id:4,cat:'Agriculture Items',name:'Organic Fertilizer (5kg)',price:299,old:399,emoji:'🌱',rating:'4.3'},
+ {id:5,cat:'Home Made Food',name:'Homemade Mango Pickle',price:199,old:249,emoji:'🍯',rating:'4.8'},
+ {id:6,cat:'Fasion',name:'Designer Dress',price:1499,old:2499,emoji:'👗',rating:'4.5'},
+ {id:7,cat:'Others',name:'Kitchen Set',price:1099,old:1599,emoji:'🍳',rating:'4.4'}
+];
+let cart=[];
+function render(list=products){document.getElementById('products').innerHTML=list.map(p=>`<article class="card"><div class="pic">${p.emoji}</div><h3>${p.name}</h3><p class="rating">★★★★★ <span style="color:#687174">${p.rating}</span></p><div class="price">₹${p.price.toLocaleString()} <span class="old">₹${p.old.toLocaleString()}</span></div><button class="add" onclick="addCart(${p.id})">🛒 Add to Cart</button></article>`).join('')}
+function addCart(id){let p=products.find(x=>x.id===id);cart.push(p);document.getElementById('cartCount').textContent=cart.length;showToast(p.name+' added to cart');}
+function filterCat(cat){render(products.filter(p=>p.cat===cat));document.getElementById('products').scrollIntoView({behavior:'smooth'});showToast(cat+' category selected')}
+function resetProducts(){render()}
+function searchProducts(){let q=document.getElementById('search').value.toLowerCase();render(products.filter(p=>(p.name+' '+p.cat).toLowerCase().includes(q)))}
+function openModal(id){document.getElementById(id).style.display='flex';if(id==='cart')renderCart()}
+function closeModal(id){document.getElementById(id).style.display='none'}
+function renderCart(){let b=document.getElementById('cartBody');if(!cart.length){b.innerHTML='<p>Your cart is empty.</p>';return}let total=cart.reduce((s,p)=>s+p.price,0);b.innerHTML=cart.map((p,i)=>`<div class="cart-row"><span>${p.emoji} ${p.name}</span><b>₹${p.price}</b></div>`).join('')+`<h3>Total: ₹${total.toLocaleString()}</h3>`}
+function openPayment(){if(!cart.length){showToast('Please add a product first');return}closeModal('cart');openModal('payment');document.getElementById('paymentSummary').innerHTML='<p><b>Items:</b> '+cart.length+' &nbsp; <b>Total:</b> ₹'+cart.reduce((s,p)=>s+p.price,0).toLocaleString()+'</p>'}
+function placeOrder(){showToast('Order placed in demo mode!');cart=[];document.getElementById('cartCount').textContent=0;closeModal('payment')}
+function login(){showToast('Demo login successful');closeModal('login')}
+function loginTab(type){document.getElementById('loginBody').innerHTML=type==='signup'?'<div class="field"><label>Full Name</label><input></div><div class="field"><label>Mobile / Email</label><input></div><div class="field"><label>Create Password</label><input type="password"></div><button class="green" onclick="login()">Create Account</button>':'<div class="field"><label>Mobile / Email</label><input placeholder="Enter mobile or email"></div><div class="field"><label>Password / OTP</label><input type="password" placeholder="Enter password"></div><button class="green" onclick="login()">Login</button>'}
+function sendSupport(){showToast('Support request submitted');closeModal('support')}
+function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+render();
+</script>
+</body>
+</html>
