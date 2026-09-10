@@ -88,7 +88,6 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 
 <div class="overlay" id="track"><div class="modal"><button class="close" onclick="closeModal('track')">×</button><h2>📦 Track Order</h2><div class="field"><label>Order ID</label><input id="orderId" placeholder="e.g. MS1001"></div><button class="green" onclick="showToast('Enter a valid order ID after placing an order')">Track</button></div></div>
 <div class="toast" id="toast"></div>
-
 <script>
 const products=[
  {id:1,cat:'Toys',name:'Teddy Bear (Soft Toy)',price:499,old:699,emoji:'🧸',rating:'4.5'},
@@ -99,22 +98,307 @@ const products=[
  {id:6,cat:'Fasion',name:'Designer Dress',price:1499,old:2499,emoji:'👗',rating:'4.5'},
  {id:7,cat:'Others',name:'Kitchen Set',price:1099,old:1599,emoji:'🍳',rating:'4.4'}
 ];
-let cart=[];
-function render(list=products){document.getElementById('products').innerHTML=list.map(p=>`<article class="card"><div class="pic">${p.emoji}</div><h3>${p.name}</h3><p class="rating">★★★★★ <span style="color:#687174">${p.rating}</span></p><div class="price">₹${p.price.toLocaleString()} <span class="old">₹${p.old.toLocaleString()}</span></div><button class="add" onclick="addCart(${p.id})">🛒 Add to Cart</button></article>`).join('')}
-function addCart(id){let p=products.find(x=>x.id===id);cart.push(p);document.getElementById('cartCount').textContent=cart.length;showToast(p.name+' added to cart');}
-function filterCat(cat){render(products.filter(p=>p.cat===cat));document.getElementById('products').scrollIntoView({behavior:'smooth'});showToast(cat+' category selected')}
-function resetProducts(){render()}
-function searchProducts(){let q=document.getElementById('search').value.toLowerCase();render(products.filter(p=>(p.name+' '+p.cat).toLowerCase().includes(q)))}
-function openModal(id){document.getElementById(id).style.display='flex';if(id==='cart')renderCart()}
-function closeModal(id){document.getElementById(id).style.display='none'}
-function renderCart(){let b=document.getElementById('cartBody');if(!cart.length){b.innerHTML='<p>Your cart is empty.</p>';return}let total=cart.reduce((s,p)=>s+p.price,0);b.innerHTML=cart.map((p,i)=>`<div class="cart-row"><span>${p.emoji} ${p.name}</span><b>₹${p.price}</b></div>`).join('')+`<h3>Total: ₹${total.toLocaleString()}</h3>`}
-function openPayment(){if(!cart.length){showToast('Please add a product first');return}closeModal('cart');openModal('payment');document.getElementById('paymentSummary').innerHTML='<p><b>Items:</b> '+cart.length+' &nbsp; <b>Total:</b> ₹'+cart.reduce((s,p)=>s+p.price,0).toLocaleString()+'</p>'}
-function placeOrder(){showToast('Order placed in demo mode!');cart=[];document.getElementById('cartCount').textContent=0;closeModal('payment')}
-function login(){showToast('Demo login successful');closeModal('login')}
-function loginTab(type){document.getElementById('loginBody').innerHTML=type==='signup'?'<div class="field"><label>Full Name</label><input></div><div class="field"><label>Mobile / Email</label><input></div><div class="field"><label>Create Password</label><input type="password"></div><button class="green" onclick="login()">Create Account</button>':'<div class="field"><label>Mobile / Email</label><input placeholder="Enter mobile or email"></div><div class="field"><label>Password / OTP</label><input type="password" placeholder="Enter password"></div><button class="green" onclick="login()">Login</button>'}
-function sendSupport(){showToast('Support request submitted');closeModal('support')}
-function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+
+/* Load cart from browser storage */
+let cart=JSON.parse(localStorage.getItem('manasamman_cart') || '[]');
+
+function saveCart(){
+ localStorage.setItem('manasamman_cart',JSON.stringify(cart));
+ updateCartCount();
+}
+
+function updateCartCount(){
+ const count=cart.reduce((total,item)=>total+item.qty,0);
+ document.getElementById('cartCount').textContent=count;
+}
+
+function render(list=products){
+ document.getElementById('products').innerHTML=list.map(p=>`
+ <article class="card">
+   <div class="pic">${p.emoji}</div>
+   <h3>${p.name}</h3>
+   <p class="rating">★★★★★ <span style="color:#687174">${p.rating}</span></p>
+   <div class="price">
+     ₹${p.price.toLocaleString()}
+     <span class="old">₹${p.old.toLocaleString()}</span>
+   </div>
+   <button class="add" onclick="addCart(${p.id})">
+     🛒 Add to Cart
+   </button>
+ </article>
+ `).join('');
+}
+
+function addCart(id){
+ const product=products.find(p=>p.id===id);
+ const existing=cart.find(item=>item.id===id);
+
+ if(existing){
+   existing.qty++;
+ }else{
+   cart.push({
+     id:product.id,
+     name:product.name,
+     price:product.price,
+     emoji:product.emoji,
+     qty:1
+   });
+ }
+
+ saveCart();
+ showToast(product.name+' added to cart');
+}
+
+function changeQty(id,change){
+ const item=cart.find(p=>p.id===id);
+
+ if(!item) return;
+
+ item.qty+=change;
+
+ if(item.qty<=0){
+   cart=cart.filter(p=>p.id!==id);
+ }
+
+ saveCart();
+ renderCart();
+}
+
+function removeFromCart(id){
+ cart=cart.filter(p=>p.id!==id);
+ saveCart();
+ renderCart();
+ showToast('Product removed from cart');
+}
+
+function getCartTotal(){
+ return cart.reduce((total,item)=>total+(item.price*item.qty),0);
+}
+
+function filterCat(cat){
+ render(products.filter(p=>p.cat===cat));
+ document.getElementById('products').scrollIntoView({behavior:'smooth'});
+ showToast(cat+' category selected');
+}
+
+function resetProducts(){
+ render();
+}
+
+function searchProducts(){
+ const q=document.getElementById('search').value.toLowerCase();
+
+ render(
+   products.filter(p=>
+     (p.name+' '+p.cat).toLowerCase().includes(q)
+   )
+ );
+}
+
+function openModal(id){
+ document.getElementById(id).style.display='flex';
+
+ if(id==='cart'){
+   renderCart();
+ }
+}
+
+function closeModal(id){
+ document.getElementById(id).style.display='none';
+}
+
+function renderCart(){
+
+ const b=document.getElementById('cartBody');
+
+ if(!cart.length){
+   b.innerHTML=`
+     <div style="text-align:center;padding:25px">
+       <div style="font-size:50px">🛒</div>
+       <h3>Your cart is empty</h3>
+       <p>Add products to your cart.</p>
+     </div>
+   `;
+   return;
+ }
+
+ b.innerHTML=cart.map(item=>`
+
+   <div class="cart-row" style="display:block">
+
+     <div style="
+       display:flex;
+       justify-content:space-between;
+       align-items:center;
+       gap:10px;
+     ">
+
+       <div>
+         <b>${item.emoji} ${item.name}</b>
+         <div style="margin-top:5px;color:#687174">
+           ₹${item.price.toLocaleString()} × ${item.qty}
+         </div>
+       </div>
+
+       <button
+         onclick="removeFromCart(${item.id})"
+         style="
+           border:0;
+           background:#ffe5e5;
+           color:#c00;
+           padding:6px 9px;
+           border-radius:6px;
+         ">
+         Remove
+       </button>
+
+     </div>
+
+     <div style="
+       display:flex;
+       align-items:center;
+       gap:10px;
+       margin-top:10px;
+     ">
+
+       <button
+         onclick="changeQty(${item.id},-1)"
+         style="
+           width:35px;
+           height:35px;
+           border:1px solid #ccd8d2;
+           background:white;
+           border-radius:7px;
+         ">
+         −
+       </button>
+
+       <b>${item.qty}</b>
+
+       <button
+         onclick="changeQty(${item.id},1)"
+         style="
+           width:35px;
+           height:35px;
+           border:1px solid #ccd8d2;
+           background:white;
+           border-radius:7px;
+         ">
+         +
+       </button>
+
+       <strong style="margin-left:auto">
+         ₹${(item.price*item.qty).toLocaleString()}
+       </strong>
+
+     </div>
+
+   </div>
+
+ `).join('');
+
+ b.innerHTML+=`
+   <div style="
+     display:flex;
+     justify-content:space-between;
+     margin-top:18px;
+     font-size:20px;
+   ">
+     <strong>Total</strong>
+     <strong>₹${getCartTotal().toLocaleString()}</strong>
+   </div>
+ `;
+}
+
+function openPayment(){
+
+ if(!cart.length){
+   showToast('Please add a product first');
+   return;
+ }
+
+ closeModal('cart');
+ openModal('payment');
+
+ document.getElementById('paymentSummary').innerHTML=`
+   <p>
+     <b>Items:</b> ${cart.reduce((s,p)=>s+p.qty,0)}
+     &nbsp;
+     <b>Total:</b> ₹${getCartTotal().toLocaleString()}
+   </p>
+ `;
+}
+
+/* Temporary functions — these will be replaced with real systems later */
+
+function placeOrder(){
+ showToast('Order system will be connected in the next step');
+}
+
+function login(){
+ showToast('Real login will be connected in the next step');
+}
+
+function loginTab(type){
+
+ document.getElementById('loginBody').innerHTML=
+ type==='signup'
+ ?
+ `
+ <div class="field">
+   <label>Full Name</label>
+   <input>
+ </div>
+
+ <div class="field">
+   <label>Mobile / Email</label>
+   <input>
+ </div>
+
+ <div class="field">
+   <label>Create Password</label>
+   <input type="password">
+ </div>
+
+ <button class="green" onclick="login()">
+   Create Account
+ </button>
+ `
+ :
+ `
+ <div class="field">
+   <label>Mobile / Email</label>
+   <input placeholder="Enter mobile or email">
+ </div>
+
+ <div class="field">
+   <label>Password</label>
+   <input type="password" placeholder="Enter password">
+ </div>
+
+ <button class="green" onclick="login()">
+   Login
+ </button>
+ `;
+}
+
+function sendSupport(){
+ showToast('Support request submitted');
+ closeModal('support');
+}
+
+function showToast(msg){
+ const t=document.getElementById('toast');
+
+ t.textContent=msg;
+ t.style.display='block';
+
+ setTimeout(()=>{
+   t.style.display='none';
+ },2200);
+}
+
 render();
+updateCartCount();
 </script>
-</body>
-</html>
+<script>
